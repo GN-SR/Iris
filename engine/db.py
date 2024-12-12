@@ -13,6 +13,6 @@ cursor.execute(query)
 query = "CREATE TABLE IF NOT EXISTS web_command(id integer primary key, name VARCHAR(100), url VARCHAR(100))"
 cursor.execute(query)
 
-query = "INSERT INTO web_command VALUES (null,'github','https://github.com/')"
+query = "INSERT INTO web_command VALUES (null,'chat gpt','https://chatgpt.com/')"
 cursor.execute(query)
 conn.commit()

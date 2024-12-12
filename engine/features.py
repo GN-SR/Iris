@@ -21,11 +21,42 @@ def openCommand(query):
     
     query = query.replace(ASSISTANT_NAME, "").replace("open", "").strip().lower()
 
-    if query!="":
-        speak("Opening "+query)
-        os.system('start '+query)
-    else:
-        speak("Not found or Unable to open , sorry for the inconveniance")
+    #if query!="":
+    #   speak("Opening "+query)
+    #    os.system('start '+query)
+    #else:
+    #    speak("Not found or Unable to open , sorry for the inconveniance")
+
+    if app_name != "":
+        try:
+            cursor.execute(
+                'SELECT path sys_command WHERE name IN (?)',(app_name,)
+            )
+            results = cursor.fetchall()
+
+            if len(results) != 0:
+                speak("Opening "+query)
+                os.startfile(results[0][0])
+
+            elif len(results) == 0:
+                cursor.execute(
+                    'SELECT url FROM web_command WHERE name IN (?)',(app_name,)
+                )
+                results = cursor.fetchall()
+
+                if len(results) != 0:
+                    speak("Opening "+query)
+                    webbrowser.open(results[0][0])
+
+                else:
+                    speak("Opening "+query)
+                    try:
+                        os.system('start '+query)
+                    except:
+                        speak("Not found")
+        
+        except:
+            speak("Some thing went wrong")
 
 def PlayYoutube(query):
     search_term = extract_yt_term(query)
