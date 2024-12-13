@@ -2,8 +2,10 @@ from playsound import playsound
 import eel
 import re
 import os
+import webbrowser
 from engine.config import ASSISTANT_NAME
 from engine.command import speak
+from engine.db import cursor,conn
 import pywhatkit as kit
 
 # Playing Assistanst Start Sound
@@ -18,45 +20,38 @@ def playAssistantSound1():
 
 
 def openCommand(query):
-    
-    query = query.replace(ASSISTANT_NAME, "").replace("open", "").strip().lower()
+    query = query.replace(ASSISTANT_NAME, "").replace("open", "").lower().strip()
+    app_name = query
 
-    #if query!="":
-    #   speak("Opening "+query)
-    #    os.system('start '+query)
-    #else:
-    #    speak("Not found or Unable to open , sorry for the inconveniance")
-
-    if app_name != "":
+    if app_name:  # Ensure app_name is not empty
         try:
-            cursor.execute(
-                'SELECT path sys_command WHERE name IN (?)',(app_name,)
-            )
+            # Fetch the path for the application
+            cursor.execute('SELECT path FROM sys_command WHERE name = ?', (app_name,))
             results = cursor.fetchall()
 
-            if len(results) != 0:
-                speak("Opening "+query)
-                os.startfile(results[0][0])
+            if results:  # If results exist
+                speak(f"Opening {app_name}")
+                os.startfile(results[0][0])  # Open the file at the fetched path
 
-            elif len(results) == 0:
-                cursor.execute(
-                    'SELECT url FROM web_command WHERE name IN (?)',(app_name,)
-                )
+            else:  # Check for URLs in the web_command table
+                cursor.execute('SELECT url FROM web_command WHERE name = ?', (app_name,))
                 results = cursor.fetchall()
 
-                if len(results) != 0:
-                    speak("Opening "+query)
-                    webbrowser.open(results[0][0])
+                if results:  # If a URL is found
+                    speak(f"Opening {app_name}")
+                    webbrowser.open(results[0][0])  # Open the fetched URL
 
-                else:
-                    speak("Opening "+query)
+                else:  # Handle case where neither path nor URL is found
+                    speak(f"Opening {app_name}")
                     try:
-                        os.system('start '+query)
-                    except:
-                        speak("Not found")
-        
-        except:
-            speak("Some thing went wrong")
+                        os.system(f'start {query}')
+                    except Exception as e:
+                        speak(f"Not found: {str(e)}")
+
+        except Exception as e:
+            speak(f"Something went wrong: {str(e)}")
+
+          
 
 def PlayYoutube(query):
     search_term = extract_yt_term(query)
