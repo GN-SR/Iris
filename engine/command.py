@@ -57,6 +57,6 @@ def allCommands():
         else:
             print("I Couldn't Run")
     except:
-        print("Error")
+        print("Errorususu")
 
     eel.ShowHood()
