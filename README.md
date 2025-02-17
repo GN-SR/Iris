@@ -31,7 +31,6 @@ To run this project, you should have the following:
 - **Python**: The back-end functionality is managed by Python, so make sure you have Python installed (Python 3.6+ is recommended).
 - **Node.js (Optional)**: Useful for installing additional JavaScript packages if you plan to extend the project.
 
-## Project Still in progress
 
 ## Installation
 
@@ -39,3 +38,7 @@ To run this project, you should have the following:
    ```bash
    git clone https://github.com/GN-SR/Iris.git
    cd Iris
+
+
+
+## Project Still in progress
