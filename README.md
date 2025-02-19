@@ -41,4 +41,4 @@ To run this project, you should have the following:
 
 
 
-## Project Still in progress
+## Project is Still in progress
